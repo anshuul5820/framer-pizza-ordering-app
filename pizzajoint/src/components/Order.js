@@ -1,5 +1,5 @@
-import React from 'react'
-import { motion } from 'framer-motion'
+import React, { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 
 const containerVariants = {
   hidden: { x: '100vw', opacity: 0 },
@@ -27,7 +27,15 @@ const childVariants = {
   visible: { opacity: 1 },
 }
 
-const Order = ({ pizza }) => {
+const Order = ({ pizza, setShowModal }) => {
+  const [showTitle, setShowTitle] = useState(true)
+
+  useEffect(() => {
+    setTimeout(() => {
+      setShowModal(true)
+    }, 5000)
+  }, [setShowModal])
+
   return (
     <motion.div
       variants={containerVariants}
@@ -35,7 +43,13 @@ const Order = ({ pizza }) => {
       animate='visible'
       className='container order'
     >
-      <h2>Thank you for your order :)</h2>
+      <AnimatePresence>
+        {showTitle && (
+          <motion.h2 exit={{ y: -1000 }}>Thank you for your order :)</motion.h2>
+          // exit is available only inside AnimatePresence
+        )}
+        {/* AnimatePresence waits element to exit the DOM until the animation is run */}
+      </AnimatePresence>
       <motion.p variants={childVariants}>
         You ordered a {pizza.base} pizza with:
       </motion.p>
